@@ -1,5 +1,31 @@
 class Flow:
   @staticmethod
+  def help():
+    print(f"""Use: 'python pync.py [tipo] [opções]'
+          Ex: 'python pync.py --server-tcp' inicia um servidor tcp padrão na porta 1234
+
+          Tipos:
+
+          --server-tcp    identifica um servidor tcp
+
+          --server-udp    identifica um servidor udp
+
+          --client-tcp    identifica um cliente tcp
+          
+          --client-udp    identifica um cliente udp
+
+          Opções:
+
+          --help          exemplo e funcionalidades da ferramenta.
+
+          -h              define o ip a ser utilizado.
+          
+          -p              define a porta a ser utilizada.
+
+          -v              define a exibição dos prints.
+          """)
+
+  @staticmethod
   def banner():
     print(f""""
        _____          _    _                    _   _        _     _____         _
