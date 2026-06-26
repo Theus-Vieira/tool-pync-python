@@ -68,9 +68,20 @@ class Engine:
 
     @staticmethod
     def server_udp(ip: str, port: int, v: bool):
+        sleep(1)
+        v and print("[*] Iniciando um servidor UDP")
+        sleep(0.5)
+        v and print(f"IP: {ip}")
+        sleep(0.5)
+        v and print(f"PORTA: {port}")
+
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((ip, port))
+
+        v and print("""
+                    [*] Aguardando mensagem...
+                    """)
 
         while True:
             try:
@@ -86,9 +97,13 @@ class Engine:
                 msg_server = input(f"[Server] - ")
 
                 s.sendto(f"{msg_server}\n".encode(), addr)
+
             except KeyboardInterrupt:
+                v and print("[*] Encerramento manual do servidor...")
                 break
             except Exception as e:
+                v and print("[!] Algo deu errado no recebimento das mensagens.")
+                v and print(e)
                 s.close()
                 exit(1)
                 break
