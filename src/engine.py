@@ -39,11 +39,11 @@ class Engine:
             print("")
 
             try:
-                res = conn.recv(4096).decode()
+                res = conn.recv(4096).decode().strip()
 
-                print(res)
+                print(f"[{addr[0]}:{addr[1]}] - {res}\n")
 
-                msg = input(">: ")
+                msg = input("[Server] - ")
 
                 if msg == "exit":
                     v and print("[*] Encerramento manual do servidor...")
