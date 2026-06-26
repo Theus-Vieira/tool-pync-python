@@ -1,10 +1,12 @@
 import src.flow as flow
+import src.engine as engine
 import sys
 
 
 def main():
     args = sys.argv
     f = flow.Flow()
+    e = engine.Engine()
 
     if "--help" in args:
         f.help()
@@ -20,7 +22,7 @@ def main():
         case "client-udp":
             print("CLIENTE UDP")
         case "server-tcp":
-            print("SERVIDOR TCP")
+            e.server_tcp(ip, port, verbose)
         case "server-udp":
             print("SERVIDOR UDP")
 
