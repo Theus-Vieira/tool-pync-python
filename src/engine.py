@@ -66,8 +66,35 @@ class Engine:
         s.close()
         exit(0)
 
-    def server_udp():
-        print("")
+    @staticmethod
+    def server_udp(ip: str, port: int, v: bool):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((ip, port))
+
+        while True:
+            try:
+                data, addr = s.recvfrom(4096)
+
+                if not data:
+                    continue
+
+                msg_client = f"[{addr[0]}:{addr[1]}] - {data.decode().strip()}\n"
+
+                print(msg_client)
+
+                msg_server = input(f"[Server] - ")
+
+                s.sendto(f"{msg_server}\n".encode(), addr)
+            except KeyboardInterrupt:
+                break
+            except Exception as e:
+                s.close()
+                exit(1)
+                break
+
+        s.close()
+        exit(0)
 
     def client_tcp():
         print("")

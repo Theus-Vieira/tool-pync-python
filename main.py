@@ -24,7 +24,7 @@ def main():
         case "server-tcp":
             e.server_tcp(ip, port, verbose)
         case "server-udp":
-            print("SERVIDOR UDP")
+            e.server_udp(ip, port, verbose)
 
 
 main()
