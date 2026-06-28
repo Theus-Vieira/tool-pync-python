@@ -110,13 +110,32 @@ class Engine:
 
     @staticmethod
     def client_tcp(ip: str, port: int, v: bool):
+        if v:
+            sleep(1)
+            print("[*] Iniciando o cliente TCP")
+            sleep(0.5)
+
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+            if v:
+                print(f"[*] Tentando se conectar a: {ip}:{port}")
+                sleep(1)
+
             try:
                 s.connect((ip, port))
+
+                if v:
+                    print("[*] Conectado com sucesso!")
+                    sleep(0.5)
+                    print("[*] Iniciando chat...")
+                    sleep(0.5)
+
             except Exception as e:
+                if v:
+                    print("[!] Houve algum problema na tentativa de conexão")
+                    print(e)
                 s.close()
                 exit(1)
 
@@ -125,6 +144,9 @@ class Engine:
                     msg = input("[Client] - ").strip()
 
                     if msg == exit:
+                        if v:
+                            print("[*] Encerrando conexão manualmente...")
+                            sleep(0.5)
                         break
 
                     s.send(f"{msg}\n".encode())
@@ -132,16 +154,27 @@ class Engine:
                     res = s.recv(4096).decode().strip()
 
                     if not res:
+                        if v:
+                            print("[*] O servidor encerrou a conexão")
                         break
 
                     print(f"[Server] - {res}")
                 except Exception as e:
+                    if v:
+                        print(
+                            "[!] Houve algum problema na tentativa de enviar/receber mensagem"
+                        )
+                        print(e)
                     s.close()
                     exit(1)
                     break
 
             s.close()
+            exit(0)
         except KeyboardInterrupt:
+            if v:
+                print("[*] Encerrando conexão manualmente...")
+                sleep(0.5)
             s.close()
             exit(0)
 
