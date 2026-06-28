@@ -18,7 +18,7 @@ def main():
 
     match type:
         case "client-tcp":
-            print("CLIENTE TCP")
+            e.client_tcp(ip, port, verbose)
         case "client-udp":
             print("CLIENTE UDP")
         case "server-tcp":

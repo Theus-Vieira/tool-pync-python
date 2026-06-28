@@ -25,9 +25,6 @@ class Engine:
             conn, addr = s.accept()
 
             v and print(f"[*] Conexão estabelecida com {addr}")
-
-            conn.send(f"Você está conectado ao servidor TCP em {ip}:{port}\n".encode())
-            conn.send("Aguardando a sua mensagem...\n".encode())
         except KeyboardInterrupt:
             exit(0)
         except Exception as e:
@@ -111,8 +108,42 @@ class Engine:
         s.close()
         exit(0)
 
-    def client_tcp():
-        print("")
+    @staticmethod
+    def client_tcp(ip: str, port: int, v: bool):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            try:
+                s.connect((ip, port))
+            except Exception as e:
+                s.close()
+                exit(1)
+
+            while True:
+                try:
+                    msg = input("[Client] - ").strip()
+
+                    if msg == exit:
+                        break
+
+                    s.send(f"{msg}\n".encode())
+
+                    res = s.recv(4096).decode().strip()
+
+                    if not res:
+                        break
+
+                    print(f"[Server] - {res}")
+                except Exception as e:
+                    s.close()
+                    exit(1)
+                    break
+
+            s.close()
+        except KeyboardInterrupt:
+            s.close()
+            exit(0)
 
     def client_udp():
         print("")
