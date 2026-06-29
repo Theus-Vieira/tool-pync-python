@@ -5,63 +5,66 @@ from time import sleep
 class Engine:
     @staticmethod
     def server_tcp(ip: str, port: int, v: bool):
-        sleep(1)
-        v and print("Iniciando um servidor TCP")
-        sleep(0.5)
-        v and print(f"IP: {ip}")
-        sleep(0.5)
-        v and print(f"PORTA: {port}")
-
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((ip, port))
-        s.listen(1)
-
-        v and print("""
-                    [*] Aguardando conexão...
-                    """)
+        if v:
+            sleep(1)
+            print("Iniciando um servidor TCP")
+            sleep(0.5)
+            print(f"IP: {ip}")
+            sleep(0.5)
+            print(f"PORTA: {port}")
 
         try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.bind((ip, port))
+            s.listen(1)
+
+            v and print("""
+                        [*] Aguardando conexão...
+                        """)
+
             conn, addr = s.accept()
 
             v and print(f"[*] Conexão estabelecida com {addr}")
-        except KeyboardInterrupt:
-            exit(0)
-        except Exception as e:
-            v and print("[!] Algo deu errado na tentativa de conexão.")
-            v and print(e)
-            exit(1)
 
-        while True:
-            print("")
+            while True:
+                print("")
 
-            try:
-                res = conn.recv(4096).decode().strip()
+                try:
+                    res = conn.recv(4096).decode().strip()
 
-                print(f"[{addr[0]}:{addr[1]}] - {res}\n")
+                    print(f"[{addr[0]}:{addr[1]}] - {res}\n")
 
-                msg = input("[Server] - ")
+                    msg = input("[Server] - ")
 
-                if msg == "exit":
-                    v and print("[*] Encerramento manual do servidor...")
+                    if msg == "exit":
+                        v and print("[*] Encerramento manual do servidor...")
+                        break
+
+                    conn.send(f"{msg}\n".encode())
+
+                except Exception as e:
+                    v and print("[!] Algo deu errado no recebimento das mensagens.")
+                    v and print(e)
+                    conn.close()
+                    s.close()
+                    exit(1)
                     break
 
-                conn.send(f"{msg}\n".encode())
-
-            except KeyboardInterrupt:
-                v and print("[*] Encerramento manual do servidor...")
-                break
-            except Exception as e:
-                v and print("[!] Algo deu errado no recebimento das mensagens.")
-                v and print(e)
-                conn.close()
-                s.close()
-                exit(1)
-                break
-
-        conn.close()
-        s.close()
-        exit(0)
+            conn.close()
+            s.close()
+            exit(0)
+        except KeyboardInterrupt:
+            v and print("[*] Encerramento manual do servidor...")
+            conn.close()
+            s.close()
+            exit(0)
+        except Exception as e:
+            if v:
+                print("[!] Um erro inesperado aconteceu.")
+            conn.close()
+            s.close()
+            exit(1)
 
     @staticmethod
     def server_udp(ip: str, port: int, v: bool):
