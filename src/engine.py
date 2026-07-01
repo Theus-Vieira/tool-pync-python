@@ -56,15 +56,24 @@ class Engine:
             exit(0)
         except KeyboardInterrupt:
             v and print("[*] Encerramento manual do servidor...")
-            conn.close()
-            s.close()
-            exit(0)
+            try:
+                conn.close()
+                s.close()
+                exit(0)
+            except:
+                s.close()
+                exit(0)
+
         except Exception as e:
             if v:
                 print("[!] Um erro inesperado aconteceu.")
-            conn.close()
-            s.close()
-            exit(1)
+            try:
+                conn.close()
+                s.close()
+                exit(1)
+            except:
+                s.close()
+                exit(1)
 
     @staticmethod
     def server_udp(ip: str, port: int, v: bool):
