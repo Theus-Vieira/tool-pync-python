@@ -190,5 +190,35 @@ class Engine:
             s.close()
             exit(0)
 
-    def client_udp():
-        print("")
+    @staticmethod
+    def client_udp(ip: str, port: int, v: bool):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            while True:
+                msg = input("[client] - ").strip()
+
+                if msg == "exit":
+                    break
+
+                s.sendto(f"{msg}\n".encode(), (ip, port))
+
+                res, _ = s.recvfrom(4096)
+
+                print(f"[server] - {res.decode()}")
+
+            s.close()
+            exit(0)
+        except KeyboardInterrupt:
+            try:
+                s.close()
+                exit(0)
+            except:
+                exit(0)
+        except:
+            try:
+                s.close()
+                exit(1)
+            except:
+                exit(1)

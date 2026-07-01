@@ -20,7 +20,7 @@ def main():
         case "client-tcp":
             e.client_tcp(ip, port, verbose)
         case "client-udp":
-            print("CLIENTE UDP")
+            e.client_udp(ip, port, verbose)
         case "server-tcp":
             e.server_tcp(ip, port, verbose)
         case "server-udp":
