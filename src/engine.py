@@ -192,14 +192,26 @@ class Engine:
 
     @staticmethod
     def client_udp(ip: str, port: int, v: bool):
+        if v:
+            sleep(1)
+            print("[*] Iniciando o cliente UDP")
+            sleep(0.5)
+
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            if v:
+                print("""
+                    [*] Iniciando o chat
+                    """)
+                sleep(1)
 
             while True:
                 msg = input("[client] - ").strip()
 
                 if msg == "exit":
+                    v and print("[*] Encerrando manualmente o cliente...")
                     break
 
                 s.sendto(f"{msg}\n".encode(), (ip, port))
@@ -211,12 +223,14 @@ class Engine:
             s.close()
             exit(0)
         except KeyboardInterrupt:
+            v and print("[*] Encerrando manualmente o cliente...")
             try:
                 s.close()
                 exit(0)
             except:
                 exit(0)
         except:
+            v and print("[!] Algo deu errado. Encerrando conexão...")
             try:
                 s.close()
                 exit(1)
